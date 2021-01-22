@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>mbti 로그인 페이지</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Custom styles for this template -->
+  <link href="carousel.css" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    #loginbox {
+      width: 1500px;
+      margin: 300px auto;
+      text-align: center;
+      background-color: #ffffff;
+    }
+
+    .container {
+      padding-bottom: 30px;
+    }
+  </style>
+
+  <script>
+    // ['쿠키'라는 개념에 대해 알아봅시다]
+    // 로그인을 구현하면, 반드시 쿠키라는 개념을 사용합니다.
+    // 페이지에 관계없이 브라우저에 임시로 저장되는 정보입니다. 키:밸류 형태(딕셔너리 형태)로 저장됩니다.
+    // 쿠키가 있기 때문에, 한번 로그인하면 네이버에서 다시 로그인할 필요가 없는 것입니다.
+    // 브라우저를 닫으면 자동 삭제되게 하거나, 일정 시간이 지나면 삭제되게 할 수 있습니다.
+    function login() {
+      $.ajax({
+        type: "POST",
+        url: "/api/login",
+        data: { id_give: $('#userid').val(), pw_give: $('#userpw').val() },
+        success: function (response) {
+          if (response['result'] == 'success') {
+            // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
+            // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
+            $.cookie('mytoken', response['token']);
+
+            alert('로그인 완료!')
+            window.location.href = '/'
+          } else {
+            // 로그인이 안되면 에러메시지를 띄웁니다.
+            alert(response['msg'])
+          }
+        }
+      })
+    }
+
+    function register() {
+      window.location.href = '/register'
+    }
+  </script>
+
+
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-dark shadow-sm" style="padding: 1; background-color:#F9A762;">
+      <a class="navbar-brand" href="/">MBTI</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">HOME <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login"">LOGIN</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">CUSTOMER CENTER</a>
+          </li>
+        </ul>
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"
+            style="height: 44px;">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><img
+              src="{{ url_for('static', filename='css/image/search.jpg')}}" alt="검색" width="31px"
+              height="31px"></button>
+        </form>
+      </div>
+    </nav>
+  </header>
+
+  <div id="loginbox">
+    <div class="container">
+      <img src="{{ url_for('static', filename='css/image/mbti.png') }}" alt="mbti" width="500" height="200"
+        preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 500x500">
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="#eee"></rect><text x="50%" y="50%" fill="#aaa" dy=".3em"></text>
+    </div>
+    <div class="find">
+      <p><input type="text" id="userid" size="50" placeholder="아이디" maxlength="20" style="width: 500px; height:70px;">
+      </p>
+      <p><input type="password" id="userpw" size="50" placeholder="비밀번호" maxlength="15"
+          style="width: 500px; height:70px;"></p>
+      <p>
+        <input type="button" value="로그인"
+          style="border: 2px solid #FD7E14; background-color: #ffffff; width: 250px;  height:70px; color: black;"
+          onclick="login()">
+        <input type="button" value="회원가입"
+          style="border: 2px solid #FD7E14; background-color: #ffffff; width: 250px;  height:70px; color: black;"
+          onclick="register()"></p><br>
+      <hr class="featurette-divider">
+
+    </div>
+  </div>
+
+
+</body>
+
+</html>

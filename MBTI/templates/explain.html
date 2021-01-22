@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<script
+    type="text/javascript">Object.defineProperty(window.navigator, 'userAgent', { get: function () { return 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)'; } }); Object.defineProperty(window.navigator, 'vendor', { get: function () { return 'Microsoft'; } }); Object.defineProperty(window.navigator, 'platform', { get: function () { return 'Windows'; } });</script>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>mbti 유형 설명 페이지</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="carousel.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        body {
+            background-image: url(static/css/image/background.jpg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 800px;
+            margin: 70px auto;
+            text-align: center;
+            color: white;
+            background-color: #ffffff;
+        }
+
+
+        #mbti_1 {
+            font-weight: bold;
+            color: black;
+        }
+
+        #mbti_2 {
+            color: #5a5a5a;
+
+        }
+    </style>
+
+    <script>
+        // 로딩 후 바로 실행
+        $(document).ready(function () {
+            if ($.cookie('mytoken') == undefined) {
+                // mytoken이라는 값으로 쿠키가 없으면, 로그인 창으로 이동시킵니다.
+                alert('먼저 로그인을 해주세요')
+                window.location.href = '/login'
+            } else {
+                // 쿠기가 있으면, 유저 정보를 불러옵니다.
+                load_user_info()
+            }
+        });
+
+        // 쿠키에 가지고 있는 token을 헤더에 담아서 보냅니다.
+        function load_user_info() {
+            $.ajax({
+                type: "GET",
+                url: "/api/nick",
+                headers: { 'token_give': $.cookie('mytoken') },
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        // 올바른 결과값을 받으면 nickname을 입력해줍니다.
+                        $('#nickname').text(response['nickname'])
+                    } else {
+                        // 에러가 나면 메시지를 띄우고 로그인 창으로 이동합니다.
+                        alert(response['msg'])
+                        window.location.href = '/login'
+                    }
+                }
+            })
+        }
+
+        // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+        function logout() {
+            $.removeCookie('mytoken');
+            alert('로그아웃!')
+            window.location.href = '/login'
+        }
+    </script>
+
+</head>
+
+<body>
+
+
+    <div id="explain">
+        <h1>{{Mbti}}</h1><br>
+        <h2>{{Name}}</h2><br>
+        {{Explain}}<br><br>
+        {{BigExplain}}
+    </div>
+</body>
+
+</html>
