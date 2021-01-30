@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>연예인의 mbti 유형 페이지</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Custom styles for this template -->
+  <link href="carousel.css" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    #main {
+      width: 1200px;
+      margin: 100px auto;
+    }
+  </style>
+
+  <script>
+    // 로딩 후 바로 실행
+    $(document).ready(function () {
+      if ($.cookie('mytoken') == undefined) {
+        // mytoken이라는 값으로 쿠키가 없으면, 로그인 창으로 이동시킵니다.
+        alert('먼저 로그인을 해주세요')
+        window.location.href = '/login'
+      } else {
+        // 쿠기가 있으면, 유저 정보를 불러옵니다.
+        load_user_info()
+      }
+    });
+
+    // 쿠키에 가지고 있는 token을 헤더에 담아서 보냅니다.
+    function load_user_info() {
+      $.ajax({
+        type: "GET",
+        url: "/api/nick",
+        headers: { 'token_give': $.cookie('mytoken') },
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
+            // 올바른 결과값을 받으면 nickname을 입력해줍니다.
+            $('#nickname').text(response['nickname'])
+          } else {
+            // 에러가 나면 메시지를 띄우고 로그인 창으로 이동합니다.
+            alert(response['msg'])
+            window.location.href = '/login'
+          }
+        }
+      })
+    }
+
+    // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+    function logout() {
+      $.removeCookie('mytoken');
+      alert('로그아웃!')
+      window.location.href = '/login'
+    }
+  </script>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-dark shadow-sm" style="padding: 1; background-color:#F9A762;">
+      <a class="navbar-brand" href="/">MBTI</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">HOME <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="logout()">LOGOUT</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">CUSTOMER CENTER</a>
+          </li>
+        </ul>
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"
+            style="height: 44px;">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><img
+              src="{{ url_for('static', filename='css/image/search.jpg')}}" alt="검색" width="31px"
+              height="31px"></button>
+        </form>
+      </div>
+    </nav>
+  </header>
+  <br><br><br><br>
+
+
+
+<div id="main">
+  <div class="row featurette">
+    <div class="col-md-7">
+      <h2 class="featurette-heading"> 슈퍼주니어 규현의 MBTI는?<br /> <span class="text-muted">ESFJ</span></h2>
+      <p class="lead">동정심과 동료애가 많으며, 친절하고 재치가 있다. 다른 사람들에게 관심을 쏟고 인화를 도모하는 일을 중요하게 여긴다. 일상적인 일에 잘 적응하며 현실적이고 실제적이다. 물질적인
+        소유를 즐기기도 한다.
+        <br><br>양심적이고 정리정돈을 잘하며 참을성이 많고 다른 사람들을 잘 돕는다. 또한 다른 사람들의 지지를 받으면 일에 더욱 열중하나 다른 사람들의 무관심한 태도에 민감하다.<br>
+        <br><br>이들의 기쁨과 만족의 대부분은 주위 사람들이 감정에서 기인한 온정을 보여주는 것에서 온다. 이들은 다른 사람들의 존경할 만한 자질에 주의를 집중하는 경향이 있어서 존경받는 사람, 널리
+        알려진 기관이나 연구소, 대의명분에 경의를 나타내며, 그들이 존경, 칭찬하는 것이라면 무엇이든지 대체로 이상적인 것으로 받아들인다.
+      </p>
+    </div>
+    <div class="col-md-5">
+      <img src="{{ url_for('static', filename='css/image/gu.jpg') }}" alt="규현" width="500" height="500"
+        preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 500x500">
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="#eee"></rect><text x="50%" y="50%" fill="#aaa" dy=".3em"></text>
+    </div>
+  </div>
+  <hr>
+
+  <div class="row featurette">
+    <div class="col-md-7 order-md-2">
+      <h2 class="featurette-heading">이효리 의 MBTI는? <span class="text-muted">ESFJ</span></h2>
+      <p class="lead">동정심과 동료애가 많으며, 친절하고 재치가 있다. 다른 사람들에게 관심을 쏟고 인화를 도모하는 일을 중요하게 여긴다. 일상적인 일에 잘 적응하며 현실적이고 실제적이다. 물질적인
+        소유를 즐기기도 한다.
+        <br><br>양심적이고 정리정돈을 잘하며 참을성이 많고 다른 사람들을 잘 돕는다. 또한 다른 사람들의 지지를 받으면 일에 더욱 열중하나 다른 사람들의 무관심한 태도에 민감하다.<br>
+        <br><br>이들의 기쁨과 만족의 대부분은 주위 사람들이 감정에서 기인한 온정을 보여주는 것에서 온다. 이들은 다른 사람들의 존경할 만한 자질에 주의를 집중하는 경향이 있어서 존경받는 사람, 널리
+        알려진 기관이나 연구소, 대의명분에 경의를 나타내며, 그들이 존경, 칭찬하는 것이라면 무엇이든지 대체로 이상적인 것으로 받아들인다.
+      </p>
+    </div>
+    <div class="col-md-5 order-md-1">
+      <img src="{{ url_for('static', filename='css/image/hyolee.jpg') }}" alt="효리" width="400" height="500"
+        preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 500x500">
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="#eee"></rect><text x="50%" y="50%" fill="#aaa" dy=".3em"></text>
+
+    </div>
+  </div>
+  <hr>
+
+
+  <div class="row featurette">
+    <div class="col-md-7">
+      <h2 class="featurette-heading"> 박명수의 MBTI는?<br /> <span class="text-muted">ESFJ</span></h2>
+      <p class="lead">책임감이 강하고 온정적이며 헌신적이다. 세부적이고 치밀성과 반복을 요하는 일을 끝까지 해 나가는 인내력이 높다. 이들이 가진 침착성과 인내력은 가정이나 집단에 안정성을
+        가져다준다. 다른 사람의 사정을 고려하며 자신과 타인의 감정 흐름에 민감하다.<br><br>
+        일 처리에 있어서 현실감각을 가지고 실제적이고 조직적으로 이행한다. 경험을 통해서 자신이 틀렸다고 인정하기까지 어떠한 난관이 있어도 꾸준히 밀고 나가는 형이다. 많은 양의 사실을 기억하고 이용할 수
+        있지만, 그 사실이 모두 정확하기를 바라며 모든 것이 명확하게 쓰여진 것을 좋아한다. 위기 상황에 대처할 때에도 차분하며 안정되어 있다.
+        그들을 잘 알기 전까지는 그들이 어떤 상황에 대처할 때 외면의 차분함 뒤에 심할 정도로 개인적인 감정을 느끼고 있음을 알기가 어렵다.<br><br>
+        이 유형의 사람들은 일을 하고 세상일에 대처할 때 행동에 분별력이 있다. 대체로 열심이며 세부적인 사항과 절차에 세심하다. 일을 완성하기 위해서 필요한 세부적이고 사소한 일을 해낼 수 있고 또 그러려고
+        한다. 이들의 인내력은 연관된 모든 일을 안정시킨다.
+      </p>
+    </div>
+
+    <div class="col-md-5">
+      <img src="{{ url_for('static', filename='css/image/su.png') }}" alt="명수" width="500" height="500"
+        preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 500x500">
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="#eee"></rect><text x="50%" y="50%" fill="#aaa" dy=".3em"></text>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row featurette">
+    <div class="col-md-7 order-md-2">
+      <h2 class="featurette-heading">비투비 이창섭의 MBTI는? <span class="text-muted">ISTJ</span></h2>
+      <p class="lead">동정심과 동료애가 많으며, 친절하고 재치가 있다. 다른 사람들에게 관심을 쏟고 인화를 도모하는 일을 중요하게 여긴다. 일상적인 일에 잘 적응하며 현실적이고 실제적이다. 물질적인
+        소유를 즐기기도 한다.
+        <br><br>양심적이고 정리정돈을 잘하며 참을성이 많고 다른 사람들을 잘 돕는다. 또한 다른 사람들의 지지를 받으면 일에 더욱 열중하나 다른 사람들의 무관심한 태도에 민감하다.<br>
+        <br><br>이들의 기쁨과 만족의 대부분은 주위 사람들이 감정에서 기인한 온정을 보여주는 것에서 온다. 이들은 다른 사람들의 존경할 만한 자질에 주의를 집중하는 경향이 있어서 존경받는 사람, 널리
+        알려진 기관이나 연구소, 대의명분에 경의를 나타내며, 그들이 존경, 칭찬하는 것이라면 무엇이든지 대체로 이상적인 것으로 받아들인다.
+      </p>
+    </div>
+    <div class="col-md-5 order-md-1">
+      <img src="{{ url_for('static', filename='css/image/changseob.png') }}" alt="창섭" width="400" height="500"
+        preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 500x500">
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="#eee"></rect><text x="50%" y="50%" fill="#aaa" dy=".3em"></text>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+</body>
+
+</html>

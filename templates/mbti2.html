@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>mbti 궁합 페이지</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Custom styles for this template -->
+  <link href="carousel.css" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+
+    #find {
+      width: 1000px;
+      margin: 100px auto;
+      text-align: center;
+      background-color: #ffffff;
+    }
+
+
+
+    #hi {
+      display: inline-block;
+      margin: 50px;
+      font-size: 30px;
+    }
+
+    #hi1 {
+      display: inline-block;
+      margin: 50px;
+      font-size: 30px;
+    }
+
+    #mbti{
+      width: 500px;
+      height: 200px;
+      margin: 70px auto;
+    }
+
+    #mbtiimg{
+      width: 500px;
+      height: 200px;
+      margin: 100px auto;
+    }
+  </style>
+  <script>
+    let send_Mbti;
+    $(document).ready(function () {
+      listing();
+    });
+
+
+
+    function listing() {
+      $.ajax({
+        type: "GET",
+        url: '/show',
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
+            let orders = response['all_orders']
+
+            for (let i = 0; i < orders.length; i++) {
+              let Name = orders[i]['Name']
+              let Mbti = orders[i]['Mbti']
+              let Explain = orders[i]['Explain']
+              let BigExplain = orders[i]['BigExplain']
+              make_mylist(Mbti)
+              make_yourlist(Mbti)
+            }
+          }
+        }
+      })
+    }
+
+    function make_mylist(Mbti) {
+      let temp_html = `<div class="card" onclick="send('${Mbti}')" style="background-color:orange; color:white;">
+                                <div class="card-body">
+                                    <h2>${Mbti}</h2>
+                                </div>
+                            </div>`
+      $('#list').append(temp_html)
+    }
+
+    function make_yourlist(Mbti) {
+      let temp_html = `<div class="card" onclick="send1('${Mbti}')" style="background-color:orange; color:white;">
+                                <div class="card-body">
+                                    <h2>${Mbti}</h2>
+                                </div>
+                            </div>`
+      $('#list1').append(temp_html)
+    }
+
+    function send(Mbti) {
+      send_MyMbti = Mbti;
+      alert(send_MyMbti + '가 선택되었습니다.')
+    }
+
+    function send1(Mbti) {
+      let send_YourMbti = Mbti;
+      alert(send_YourMbti + '가 선택되었습니다.')
+      var win = window.open('/result?MyMbti=' + send_MyMbti + "&YourMbti=" + send_YourMbti, 'win', 'width=1000, height=600');
+    }
+
+    // 로딩 후 바로 실행
+    $(document).ready(function () {
+      if ($.cookie('mytoken') == undefined) {
+        // mytoken이라는 값으로 쿠키가 없으면, 로그인 창으로 이동시킵니다.
+        alert('먼저 로그인을 해주세요')
+        window.location.href = '/login'
+      } else {
+        // 쿠기가 있으면, 유저 정보를 불러옵니다.
+        load_user_info()
+      }
+    });
+
+    // 쿠키에 가지고 있는 token을 헤더에 담아서 보냅니다.
+    function load_user_info() {
+      $.ajax({
+        type: "GET",
+        url: "/api/nick",
+        headers: { 'token_give': $.cookie('mytoken') },
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
+            // 올바른 결과값을 받으면 nickname을 입력해줍니다.
+            $('#nickname').text(response['nickname'])
+          } else {
+            // 에러가 나면 메시지를 띄우고 로그인 창으로 이동합니다.
+            alert(response['msg'])
+            window.location.href = '/login'
+          }
+        }
+      })
+    }
+
+    // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+    function logout() {
+      $.removeCookie('mytoken');
+      alert('로그아웃!')
+      window.location.href = '/login'
+    }
+  </script>
+  <!-- Custom styles for this template -->
+
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-dark shadow-sm" style="padding: 1; background-color:#F9A762;">
+      <a class="navbar-brand" href="/">MBTI</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">HOME <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="logout()">LOGOUT</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">CUSTOMER CENTER</a>
+          </li>
+        </ul>
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"
+            style="height: 44px;">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><img
+              src="{{ url_for('static', filename='css/image/search.jpg')}}" alt="검색" width="31px"
+              height="31px"></button>
+        </form>
+      </div>
+    </nav>
+  </header>
+  
+  <div id="mbti">
+    <img src="{{ url_for('static', filename='css/image/MBTI.png') }}" id="mbtiimg" alt="mbti" width="300" height="300">
+  </div>
+
+  <div id="find">
+    <div id="hi">
+      나의 mbti 유형은?
+      <div id="list">
+      </div>
+    </div>
+    <div id="hi1">
+      당신의 mbti 유형은?
+      <div id="list1">
+      </div>
+    </div>
+
+    <br>
+    <hr>
+  </div>
+
+
+
+</body>
+
+</html>
